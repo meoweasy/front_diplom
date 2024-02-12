@@ -35,12 +35,12 @@ class Navbar extends Component {
                     <div className='phone'>+7 (999) 000 12-34</div>
                     <div className='navigation_first'>
                         <div className='nav'>
-                            <Link to="/home" className="no-style-link">
+                            <Link to="/" className="no-style-link">
                                 Главная
                             </Link>
                         </div>
                         <div className='nav'>
-                            <Link to="/catslog" className="no-style-link">
+                            <Link to="/catolog" className="no-style-link">
                                 Каталог
                             </Link>
                         </div>
@@ -54,7 +54,7 @@ class Navbar extends Component {
                 <div className='header_cont_second'>
                     <div className='categories_cont'>
                         <div class="dropdown hover">
-                            <a href="8">Категории</a>
+                            <a href="/">Категории</a>
                             <ul>
                                 <li><a href="#">Категория1</a></li>
                                 <li><a href="#">Категория2</a></li>

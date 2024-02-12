@@ -1,0 +1,233 @@
+@import './main.scss';
+
+.header{
+    width: 100%;
+    height: 176px;
+}
+.header_cont{
+    width: 1170px;
+    height: 176px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+// первая часть шапки
+.header_cont_first{
+    width: 1170px;
+    height: 51px;
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+.logo{
+    font-family: $font_logo;
+    font-weight: 700;
+    font-size: 35px;
+    @include text-gradient(#FD475E, #7D8AFA);
+    margin-left: 19px;
+}
+.social_network{
+    width: 112px;
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: 11px;
+    margin-left: 97px;
+}
+.social{
+    margin-right: 8px;
+}
+.social:last-child{
+    margin-right: 0px;
+}
+.phone{
+    width: max-content;
+    height: 16px;
+    font-family: $font_main;
+    font-weight: 500;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-left: 16px;
+}
+.navigation_first{
+    width: 357px;
+    height: 16px;
+    display: flex;
+    margin-left: auto;
+    margin-top: 5px;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+a:hover{
+    color: $main_color;
+}
+.nav{
+    text-transform: uppercase;
+    font-family: $font_main;
+    font-weight: 400;
+    margin-right: 50px;
+    font-size: 16px;
+}
+.nav:last-child{
+    margin-right: 0px;
+}
+
+// вторая часть шапки
+.header_cont_second{
+    width: 1170px;
+    height: 47px;
+    display: flex;
+    align-items: center;
+}
+//выпадающий список категорий
+.dropdown {
+    width: 241px;
+    display: inline-block;
+    position: relative;
+}
+.dropdown > a[href='8']{
+    border-radius: 2px;
+    background-color: $main_color;
+    text-transform: uppercase;
+    color: #FFF;
+}
+.dropdown > a::after {
+    content: "";
+    float: right;
+    margin: 15px 15px 0 0;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid #fff;
+}
+.dropdown ul {
+    list-style-type: none;
+    display: block;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+}
+.dropdown a {
+    display: block;
+    padding: 0 0 0 10px;
+    text-decoration: none;
+    line-height: 40px;
+    font-family: $font_main;
+    font-weight: 400;
+    font-size: 14px;
+    color: #AAA;
+    background-color: #EEE;
+}
+.dropdown li {
+    height: 0;
+    overflow: hidden;
+    transition: all 500ms;
+}
+.dropdown.hover li {
+    transition-delay: 300ms;
+}
+.dropdown li:first-child a {
+    border-radius: 2px 2px 0 0;
+}
+.dropdown li:last-child a {
+    border-radius: 0 0 2px 2px;
+}
+.dropdown li:first-child a::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #FFF;
+    margin: -10px 0 0 30px;
+}
+.dropdown a:hover {
+    background-color: $main_color;
+    color: #fff;
+}
+.dropdown > a:hover::after {
+    border-top-color: #fff;
+}
+.dropdown li:first-child a:hover::before {
+    border-bottom-color: #EEE;
+}
+.dropdown.hover:hover li {          
+    height: 40px;
+}
+.dropdown.hover:hover li:first-child {
+    padding-top: 15px;
+}
+//поиск
+.search_cont{
+    height: 40px;
+    font-family: $font_main;
+    font-size: 16px;
+    font-weight: 400;
+    margin-left: auto;
+    margin-right: auto;
+}
+.search_cont > input {
+    width: 271px;
+    height: 38px;
+    padding: 0px;
+    border-radius: 2px 0px 0px 2px;
+    border: 1px solid $main_color;
+    padding-left: 15px;
+}
+.search_cont > button {
+    width: 142px;
+    height: 40px;
+    border: none;
+    background-color: $main_color;
+    margin-left: -1px;
+    color: #FFF;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-weight: 500;
+    border-radius: 0px 2px 2px 0px;
+}
+input:focus {
+    outline: none;
+}
+//личный кабинет и корзина
+.navigation_second{
+    display: flex;
+    flex-direction: row;
+    //margin-left: auto;
+}
+.nav2{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 40px;
+    justify-content: center;
+    cursor: pointer;
+}
+.nav2:first-child{
+    margin-right: 36px;
+}
+.svg{
+    width: 20px;
+    height: 20px;
+    margin-bottom: -2px;
+}
+.svg2{
+    width: 20px;
+    height: 20px;
+    margin-bottom: -1px;
+}
+.label{
+    font-family: $font_main;
+    font-size: 14px;
+    font-weight: 400;
+}

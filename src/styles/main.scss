@@ -1,1 +1,18 @@
 //цвета
+$main_color: #7D8AFA;
+
+//градиент
+@mixin text-gradient($color1, $color2) {
+    background: linear-gradient(to right, $color1, $color2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+//------------шрифты--------------
+// шрифт для лого
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@700&display=swap');
+$font_logo: 'Merienda', cursive;
+
+//основной шрифт
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap');
+$font_main: 'Montserrat', sans-serif;

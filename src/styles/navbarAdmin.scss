@@ -1,0 +1,25 @@
+@import './main.scss';
+.headerAdmin {
+    width: 100%;
+    height: 60px;
+    background: linear-gradient(to right, #FD475E, #7D8AFA);
+    font-family: $font_main;
+    font-weight: 600;
+    font-size: 16px;
+}
+.header_admin_cont{
+    width: 1170px;
+    height: 60px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: right;
+}
+.nav_admin{
+    padding: 20px 10px 21px 10px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+.no-style-link-admin{
+    text-decoration: none;
+    color: #5a3683;
+}

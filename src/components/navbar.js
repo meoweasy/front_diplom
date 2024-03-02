@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom';
 import "../styles/navbar.scss";
 
-class Navbar extends Component {
-  render() {
+const Navbar = () => {
+    const location = useLocation();
+
+    if (location.pathname === '/admin_home') {
+        return null;
+    }
+
     return (
       <>
         <div className="header">
@@ -93,7 +98,6 @@ class Navbar extends Component {
         </div>
       </>
     );
-  }
 }
 
 export default Navbar;

@@ -12,7 +12,6 @@ function App() {
     <Router>
         <Navbar />
         <Routes>
-            {/* <Route exact path="/" element={<Home />} /> */}
             <Route path="/admin_home/*" element={<AdminHome />} />
         </Routes>
     </Router>

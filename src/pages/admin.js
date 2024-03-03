@@ -1,7 +1,7 @@
 import React, {  } from 'react';
 import '../styles/adminHome.scss';
 import NavbarAdmin from '../components/navbarAdmin';
-import { BrowserRouter as Navigate, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Schema from './schema';
 
 

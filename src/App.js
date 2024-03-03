@@ -4,14 +4,14 @@ import {
     Routes,
     Route,
 } from "react-router-dom";
-import Navbar from'./components/navbar.js';
 import AdminHome from './pages/admin.js';
+import Home from "./pages/home.js"
 
 function App() {
   return (
     <Router>
-        <Navbar />
         <Routes>
+            <Route path="/home/*" element={<Home />} />
             <Route path="/admin_home/*" element={<AdminHome />} />
         </Routes>
     </Router>

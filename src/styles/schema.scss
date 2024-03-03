@@ -3,4 +3,194 @@
 .schema_cont{
     width: 1170px;
     display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: row;
+}
+
+.setting_block{
+    display: flex;
+    flex-direction: column;
+}
+
+.title_setting{
+    font-family: $font_main;
+    font-size: 24px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.collapse-block {
+    width: 300px;
+    border-radius: 30px;
+    box-shadow: 4px 10px 10px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    transition: height 0.3s ease-in-out;
+    font-family: $font_main;
+}
+
+.collapsed .content {
+    height: 0;
+    overflow: hidden;
+}
+
+.header_set{
+    display: flex;
+    align-items: center
+}
+
+.circle{
+    width: 35px; 
+    height: 35px; 
+    background-color: $main_color;
+    border-radius: 50%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+.title_set{
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    margin-left: 10px;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+}
+.nav_btn_set{
+    display: flex;
+    margin-left: auto;
+    margin-top: 15px;
+}
+.nextBtn{
+    margin-left: 10px;
+    width: 35px; 
+    height: 35px; 
+    background-color: $main_color;
+    border-radius: 50%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s all;
+    border: 1px solid $main_color;
+    .svg-inline--fa{
+    font-size: 10px;
+    font-weight: 900;
+    color: white;
+    }
+}
+.nextBtn:hover{
+    background-color: white;
+    border: 1px solid $main_color;
+    .svg-inline--fa{
+    color: $main_color;
+    }
+}
+.backBtn{
+    width: 35px; 
+    height: 35px; 
+    background-color: white;
+    border-radius: 50%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s all;
+    border: 1px solid $main_color;
+    .svg-inline--fa{
+    font-size: 10px;
+    font-weight: 900;
+    color: $main_color;
+    }
+}
+.backBtn:hover{
+    background-color: $main_color;
+    border: 1px solid $main_color;
+    .svg-inline--fa{
+    color: white;
+    }
+}
+
+//блок для добавления изображения
+.pic_cont{
+    width: 300px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.subtitle_pic{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-family: $font_main;
+}
+.add_pic{
+    width: 150px;
+    height: 40px;
+    border: 1px solid $main_color;
+    border-radius: 30px;
+    background-color: white;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: $font_main;
+    transition: 0.5s all;
+}
+.add_pic:hover{
+    background-color: $main_color;
+    color: white;
+}
+.img_info{
+    width: 300px;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.title_img{
+    margin-left: 10px;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: $font_main;
+}
+
+//блок для выбора формата
+.format_cont{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+.orient_text{
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-family: $font_main;
+    font-weight: 500;
+}
+.radio_cast{
+    display: flex;
+    margin-top: 4px;
+}
+.orient_label{
+    font-size: 14px;
+    font-family: $font_main;
+    margin-left: 5px;
+}
+.form_text{
+    margin-top: 10px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-family: $font_main;
+    font-weight: 500;
+}
+
+//окно изображения
+.img_win{
+    width: 850px;
+    height: 850px;
+    margin-left: 50px;
+    margin-top: 59px;
 }

@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import '../styles/home.scss';
-import SliderStocks from '../components/sliderStocks';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from '../components/navbar';
+import HomePage from './homePage';
 
-class Home extends Component {
-    render() {
-        return (
-          <div>
-            <div className='home'>
-                <SliderStocks/>
-            </div>
-          </div>
-        );
-    }
+const Home = () => {
+    return (
+        <div>
+            <Navbar />
+            <Routes>
+                <Route exact path="/home" element={<HomePage />} />
+            </Routes>
+        </div>
+    );
 }
 
 export default Home;

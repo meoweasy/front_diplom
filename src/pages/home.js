@@ -8,7 +8,7 @@ const Home = () => {
         <div>
             <Navbar />
             <Routes>
-                <Route exact path="/home" element={<HomePage />} />
+                <Route exact path="/" element={<HomePage />} />
             </Routes>
         </div>
     );

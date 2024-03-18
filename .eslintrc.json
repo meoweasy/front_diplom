@@ -1,0 +1,6 @@
+{
+    "globals": {
+      "importScripts": "readonly",
+      "_": "readonly"
+    }
+}

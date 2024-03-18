@@ -9,8 +9,8 @@ import ColorThief from 'colorthief';
 import  { Slider } from 'material-ui-slider';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-// import ClearIcon from '@mui/icons-material/Clear';
-// import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import ClearIcon from '@mui/icons-material/Clear';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 const Schema = () => {
     const [selectedImage, setImageSrc] = useState(null);
@@ -363,7 +363,7 @@ const Schema = () => {
                                                     marginRight: '-14px'
                                                 }}
                                             >
-                                                {/* <AutoFixHighIcon sx={{ color: 'white' }} /> */}
+                                                <AutoFixHighIcon sx={{ color: 'white' }} />
                                             </IconButton>
                                         )
                                     }}
@@ -390,7 +390,7 @@ const Schema = () => {
                                                 #{color.r.toString(16)}{color.g.toString(16)}{color.b.toString(16)}
                                             </span>
                                             <IconButton onClick={() => handleColorRemoval(index)}>
-                                                {/* <ClearIcon sx={{ fontSize: 15 }}/> */}
+                                                <ClearIcon sx={{ fontSize: 15 }}/>
                                             </IconButton>
                                         </div>
                                     ))}

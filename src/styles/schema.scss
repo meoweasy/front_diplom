@@ -294,3 +294,20 @@ canvas {
 }
 .ldio-1tj2d9fybmc div { box-sizing: content-box; }
 
+.add_pic2{
+    width: 150px;
+    height: 40px;
+    border: 1px solid $main_color;
+    border-radius: 30px;
+    background-color: white;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: $font_main;
+    transition: 0.5s all;
+    margin-top: 10px;
+}
+.add_pic2:hover{
+    background-color: $main_color;
+    color: white;
+}
+

@@ -228,6 +228,10 @@ const Schema = () => {
         setPaletteRGB(prevPalette => prevPalette.filter((_, index) => index !== indexToRemove));
     };
 
+    const reload = () => {
+        window.location.reload(false)
+    }
+
     return (
         <div>
             <div className="schema">
@@ -401,13 +405,16 @@ const Schema = () => {
                             key={3}
                             number={4}
                             header={'Генерация'} 
-                            expandedHeight={'200px'} 
+                            expandedHeight={'270px'} 
                             isFirst={false} isLast={true} 
                             onNext={handleNext} 
                             onPrev={handlePrev} 
                             isVisible={currentBlockIndex === 3}>
                             <div className="pic_cont">
-                                <button className="add_pic" onClick={handleButtonClick3}>Сгенерировать</button>
+                                <div className="subtitle_pic">Нажмите кнопку сгенерировать и дождитесь процесса генерации</div>
+                                <button className="add_pic2" onClick={handleButtonClick3}>Сгенерировать</button>
+                                <button className="add_pic2" onClick={reload}>Сбросить</button>
+                                <button className="add_pic2" onClick={handleButtonClick3}>Сохранить</button>
                                 <input type="range" min="1" max="100" step="1" value="40" id="darknessSlider" style={{display: "none"}}
                                     oninput="document.getElementById('darknessSliderNumber').innerHTML = this.value; var gray = Math.round(255 * (1 - this.value / 100)); document.getElementById('darknessSliderNumber').style.color = 'rgb('+gray+', '+gray+', '+gray+')';"></input>
   
@@ -452,7 +459,10 @@ const Schema = () => {
                                         <img src={croppedImage} alt="" style={{ maxWidth: "100%", height: "100%", objectFit: "contain" }} onClick={handleImageClick} />
                                     </div>
                                 ) : currentBlockIndex === 3 ? (
-                                    <div></div>
+                                    <div>
+                                        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                                        {showCreatePic && <CreatePic selectedColors={paletteRGB} selectedImage={croppedImage} />}
+                                    </div>
                                 ) : (
                                     <div className="img_win">
                                         {/* Заглушка, если изображение не выбрано */}
@@ -460,8 +470,6 @@ const Schema = () => {
                                 )}
                             </>
                         )}
-                        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-                        {showCreatePic && <CreatePic selectedColors={paletteRGB} selectedImage={croppedImage} />}
                     </div>
                 </div>
             </div>

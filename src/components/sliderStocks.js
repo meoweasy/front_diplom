@@ -40,7 +40,7 @@ const SliderStocks = () => {
                     {slides.map((slide, index) => (
                         <li key={index} style={{backgroundColor: slide.color}}>
                             <div>
-                                <h3>{slide.title}</h3>
+                                <img class="act" src='77.jpeg'/>
                             </div>
                         </li>
                     ))}

@@ -12,6 +12,9 @@ import {
 import Schema from './schema';
 import { useEffect } from 'react';
 import LoginAdmin from './loginAdmin';
+import Data from './dataPage';
+import ShemaTable from './schemaTable';
+import PalleteTable from './palleteTable';
 
 
 const AdminHome = () => {
@@ -23,7 +26,7 @@ const AdminHome = () => {
         if (!isAuthenticated && location.pathname !== '/admin/login') {
             navigate('/admin/login');
         } else if (isAuthenticated && location.pathname === '/admin/login') {
-            navigate('/admin/home');
+            navigate('/admin/home/schema');
         }
     }, [location.pathname, navigate, isAuthenticated]);
 
@@ -37,6 +40,9 @@ const AdminHome = () => {
                 {isAuthenticated ? (
                     <>
                     <Route path="/home/schema" element={<Schema />} />
+                    <Route path="/home/data" element={<Data />} />
+                    <Route path="/home/schemasData" element={<ShemaTable />} />
+                    <Route path="/home/palleteData" element={<PalleteTable />} />
                     </>
                 ) : (
                     <Route path="*" element={<Navigate to="/admin/login" />} />

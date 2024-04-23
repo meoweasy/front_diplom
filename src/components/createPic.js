@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef  } from 'react';
-
+import axios2 from '../config/axiosConfig';
 
 const CreatePic = ({ selectedColors, selectedImage }) => {
     const canvasRef = useRef(null);
@@ -8,6 +8,85 @@ const CreatePic = ({ selectedColors, selectedImage }) => {
     const [isReady, setIsReady] = useState(false);
     const imgRef = useRef(null);
     const [currentImage, setCurrentImage] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [schemaDescription, setSchemaDescription] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [dataCategory, setDataCategory] = useState([]);
+
+    const fetchCategory = async () => {
+        try {
+            const response = await axios2.get(`/categories`);
+            return response.data;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchedData = await fetchCategory();
+                setDataCategory(fetchedData);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error);
+            }
+        };
+        
+        fetchData();
+    }, []);
+
+    const rgbToHex = (r, g, b) => {
+        const toHex = (c) => {
+            const hex = c.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        };
+    
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    };
+
+    const handleAddSchema = async () => {
+        if (!currentImage) return;
+        try {
+            const formData = new FormData();
+
+            const coloredSchemaBlob = await canvasToBlob(canvasRef);
+            formData.append('imagefullschema', coloredSchemaBlob, 'colored.png');
+
+            const outlineBlob = await canvasToBlob(outlineCanvasRef);
+            formData.append('imageschema', outlineBlob, 'outline.png');
+
+            const hexColors = selectedColors.map(color => rgbToHex(color.r, color.g, color.b));
+            formData.append('selectedColors', JSON.stringify(hexColors));
+
+            formData.append('schemaDescription', schemaDescription);
+            formData.append('selectedCategories', JSON.stringify(selectedCategories));
+
+            formData.append('selectedImage', selectedImage, 'selectedImage.png');
+
+            // Отправка FormData на сервер
+            const response = await axios2.post('/schemas', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.status === 201) {
+                console.log('Изображения успешно сохранены');
+            }
+        } catch (error) {
+            console.error('Ошибка при сохранении изображений:', error);
+        }
+    };
+
+
+    const toggleCategory = (categoryId) => {
+        setSelectedCategories((prevCategories) =>
+          prevCategories.includes(categoryId)
+            ? prevCategories.filter((id) => id !== categoryId)
+            : [...prevCategories, categoryId]
+        );
+    };
 
     const handleImageChange = (canvasRef) => {
         // Преобразование канваса в изображение
@@ -46,6 +125,7 @@ const CreatePic = ({ selectedColors, selectedImage }) => {
                 if (status === 'схема почти сформирована, последние штрихи') {
                     displayResults(matSmooth, matLine, labelLocs);
                     setIsReady(true);
+                    handleImageChange(canvasRef);
                 }
             };
         };
@@ -128,7 +208,43 @@ const CreatePic = ({ selectedColors, selectedImage }) => {
         return imgData;
     };
 
-
+    const handleSaveImages = async () => {
+        if (!currentImage) return;
+    
+        try {
+            const formData = new FormData();
+    
+            // Преобразование раскрашенной схемы в Blob и добавление в FormData
+            canvasRef.current.toBlob(async (blob) => {
+                formData.append('imagefullschema', blob, 'colored.png');
+            }, 'image/png');
+    
+            // Преобразование содержимого outlineCanvas в Blob и добавление в FormData
+            outlineCanvasRef.current.toBlob(async (blob) => {
+                formData.append('imageschema', blob, 'outline.png');
+    
+                // Преобразование массива paletteRGB в список строк и добавление в FormData
+                selectedColors.forEach((color, index) => {
+                    const hexColor = `#${color.r.toString(16)}${color.g.toString(16)}${color.b.toString(16)}`;
+                    formData.append('palette', hexColor);
+                });
+    
+                // Отправка FormData на сервер
+                const response = await axios2.post('/api/schema/add', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+    
+                if (response.status === 201) {
+                    console.log('Изображения успешно сохранены');
+                }
+            }, 'image/png');
+    
+        } catch (error) {
+            console.error('Ошибка при сохранении изображений:', error);
+        }
+    };
 
 
     return (
@@ -147,8 +263,46 @@ const CreatePic = ({ selectedColors, selectedImage }) => {
                     <div className='container_ready_schema2'>
                         {currentImage && <img src={currentImage.src} alt="" style={{ maxWidth: "100%", height: "100%", objectFit: "contain" }}/>}
                     </div>
-                    <button onClick={() => handleImageChange(canvasRef)}>Раскрашенная схема</button>
-                    <button onClick={() => handleImageChange(outlineCanvasRef)}>Схема</button>
+                    <div className="pic_container">
+                        <button onClick={() => handleImageChange(canvasRef)}>Раскрашенная схема</button>
+                        <button onClick={() => handleImageChange(outlineCanvasRef)}>Схема</button>
+                        <button onClick={() => setIsModalOpen(true)}>Сохранить</button>
+                    </div>
+                    {/* Модальное окно для добавления */}
+                    {isModalOpen && (
+                        <div className="modal_schema">
+                            <div className="modal_schema_container">
+                                <div className="title_modal_schema">Сохранение схемы</div>
+
+                                <div className="title_modal_categ">Выберите категорию</div>
+                                <div className="list_category">
+                                    {dataCategory.map(({ row, index }) => (
+                                        <div key={index}>
+                                            <input
+                                                type="checkbox"
+                                                id={id}
+                                                checked={selectedCategories.includes(id)}
+                                                onChange={() => toggleCategory(id)}
+                                            />
+                                            <label htmlFor={index}>{row.name}</label>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <textarea
+                                    className='schema_desc'
+                                    placeholder='Небольшое описание схемы'
+                                    value={schemaDescription}
+                                    onChange={(e) => setSchemaDescription(e.target.value)}
+                                ></textarea>
+                                
+                                <div className="modal_schema_action">
+                                    <button onClick={handleAddSchema}>добавить</button>
+                                    <button onClick={() => setIsModalOpen(false)}>отмена</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 

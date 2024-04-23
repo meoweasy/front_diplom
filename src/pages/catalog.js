@@ -44,7 +44,7 @@ const Catalog = () => {
         { name: "Категория 2", count: 18 },
         { name: "Категория 3", count: 12 },
         { name: "Категория 4", count: 8 }
-      ];
+    ];
 
     return (
         <div>

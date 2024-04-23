@@ -26,6 +26,15 @@ const navbarAdmin = () => {
                         <Link to="/admin/home/schema" className="no-style-link-admin">
                             Создание схемы
                         </Link>
+                        <Link to="/admin/home/data" className="no-style-link-admin">
+                            Категории и акции
+                        </Link>
+                        <Link to="/admin/home/schemasData" className="no-style-link-admin">
+                            Схемы
+                        </Link>
+                        <Link to="/admin/home/palleteData" className="no-style-link-admin">
+                            Палитра
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,98 @@
+@import './main.scss';
+
+.modal_addcolor_container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative; 
+    display: flex;
+    width: 300px;
+    height: 370px;
+    flex-direction: column;
+}
+.title_modal_addcolor{
+    font-weight: 500;
+    font-size: 16px;
+    color: #616bc4;
+    margin-bottom: 7px;
+}
+.title_modal_hex{
+    font-weight: 500;
+    font-size: 14px;
+    font-family: $font_main;
+}
+.cont_namecolor{
+    display: flex;
+    width: 300px;
+    margin-top: 3px;
+}
+.title_modal_hex{
+    margin-right: 10px;
+}
+input[name="hex"]{
+    width: 100%;
+}
+input[name="color_name"]{
+    width: 100%;
+}
+select[name="color_type"]{
+    margin-top: 3px;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: $font_main;
+}
+select[name="color_covering"]{
+    margin-top: 3px;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: $font_main;
+}
+input[name="color_manufacturer"]{
+    width: 100%;
+}
+input[name="color_nameline"]{
+    width: 100%;
+}
+input[name="color_num"]{
+    width: 100%;
+}
+.cont_namecolor2{
+    width: 300px;
+    margin-top: 3px;
+}
+input[name="color_pegment"]{
+    width: 192px;
+}
+button[name="color_pegment"]{
+    width: 95px;
+    margin-left: 5px;
+}
+.title_modal_peg{
+    font-weight: 500;
+    font-size: 14px;
+    font-family: $font_main;
+    text-align: center;
+    width: 300px;
+    margin-bottom: 3px;
+}
+.sp_peg{
+    width: 300px;
+    height: 62px;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: $font_main;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto;
+}
+.palette::-webkit-scrollbar {
+    width: 6px;
+}
+.palette::-webkit-scrollbar-thumb {
+    background-color: $main_color; 
+    border-radius: 5px;
+}
+input[name="color_volume"]{
+    width: 100%;
+    margin-top: 3px;
+}

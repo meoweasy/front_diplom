@@ -13,9 +13,6 @@
     height: 637px;
     display: block;
 }
-.table_pallete_data td{
-    text-align: center;
-}
 .pag_container{
     display: flex;
     align-items: center;
@@ -52,4 +49,57 @@
     font-weight: 500;
     font-size: 14px;
     font-family: $font_main;
+}
+.row-data{
+    height: 120px;
+}
+.categories-column{
+    height: 104px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+.desc_column {
+    height: 104px;
+    width: 200px;
+    word-wrap: break-word;
+    text-align: center;
+}
+.pal_column{
+    height: 104px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+.img_data{
+    height: 104px;
+    width: 200px;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-family: $font_main; 
+}
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+}
+.modal-content img{
+    margin-top: 15px;
+    border: 1px solid #000000;
 }

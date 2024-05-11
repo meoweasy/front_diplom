@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef  } from 'react';
 import axios2 from '../config/axiosConfig';
+import Swal from 'sweetalert2';
 
 const CreatePic = ({ selectedColors, selectedImage }) => {
     const canvasRef = useRef(null);
@@ -42,42 +43,112 @@ const CreatePic = ({ selectedColors, selectedImage }) => {
             return hex.length === 1 ? '0' + hex : hex;
         };
     
-        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+        return `#${toHex(r).toUpperCase()}${toHex(g).toUpperCase()}${toHex(b).toUpperCase()}`;
     };
+    
 
-    const handleAddSchema = async () => {
-        if (!currentImage) return;
+    async function canvasToBlob(canvasRef) {
+        const canvas = canvasRef.current;
+        return new Promise((resolve, reject) => {
+            try {
+                canvas.toBlob(blob => {
+                    if (blob) {
+                        resolve(blob);
+                    } else {
+                        const dataURL = canvas.toDataURL();
+                        const mimeType = dataURL.split(',')[0].split(':')[1].split(';')[0];
+                        const byteString = atob(dataURL.split(',')[1]);
+                        const arrayBuffer = new ArrayBuffer(byteString.length);
+                        const uint8Array = new Uint8Array(arrayBuffer);
+    
+                        for (let i = 0; i < byteString.length; i++) {
+                            uint8Array[i] = byteString.charCodeAt(i);
+                        }
+    
+                        const blob = new Blob([arrayBuffer], { type: mimeType });
+                        resolve(blob);
+                    }
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+    
+    async function urlToBlob(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Ошибка при загрузке изображения');
+            }
+            return await response.blob();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    const addSchema = async (newSchema) => {
         try {
             const formData = new FormData();
+            formData.append('schemaDescription', newSchema.schemaDescription);
+            formData.append('selectedImage', newSchema.selectedImageBlob);
+            formData.append('imagefullschema', newSchema.imagefullschemaBlob);
+            formData.append('imageschema', newSchema.imageschemaBlob);
+            formData.append('selectedCategories', JSON.stringify(newSchema.selectedCategories));
+            formData.append('selectedColors', JSON.stringify(newSchema.selectedColors));
 
-            const coloredSchemaBlob = await canvasToBlob(canvasRef);
-            formData.append('imagefullschema', coloredSchemaBlob, 'colored.png');
-
-            const outlineBlob = await canvasToBlob(outlineCanvasRef);
-            formData.append('imageschema', outlineBlob, 'outline.png');
-
-            const hexColors = selectedColors.map(color => rgbToHex(color.r, color.g, color.b));
-            formData.append('selectedColors', JSON.stringify(hexColors));
-
-            formData.append('schemaDescription', schemaDescription);
-            formData.append('selectedCategories', JSON.stringify(selectedCategories));
-
-            formData.append('selectedImage', selectedImage, 'selectedImage.png');
-
-            // Отправка FormData на сервер
+            
             const response = await axios2.post('/schemas', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+            return response;
+        } catch (error) {
+            console.error('Ошибка при добавлении:', error);
+            throw error;
+        }
+    }
 
-            if (response.status === 201) {
-                console.log('Изображения успешно сохранены');
+    const handleAddSchema = async () => {
+        if (!currentImage) return;
+    
+        try {
+            // Получаем реальные данные из обещаний
+            const selectedImageBlob = await urlToBlob(selectedImage);
+            const imagefullschemaBlob = await canvasToBlob(canvasRef);
+            const imageschemaBlob = await canvasToBlob(outlineCanvasRef);
+    
+            const schema = {
+                selectedCategories: selectedCategories.map(id => id.toString()),
+                selectedColors: selectedColors.map(color => rgbToHex(color.r, color.g, color.b)),
+                schemaDescription: schemaDescription,
+                selectedImageBlob: selectedImageBlob,
+                imagefullschemaBlob: imagefullschemaBlob,
+                imageschemaBlob: imageschemaBlob
+            };
+    
+            const addedStock = await addSchema(schema);
+            if (addedStock.status === 201) {
+                Swal.fire({
+                    title: 'Добавлено!',
+                    text: 'Схема успешно добавлена',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
             }
         } catch (error) {
-            console.error('Ошибка при сохранении изображений:', error);
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка',
+                text: error.message || 'Ошибка при добавлении схемы',
+            });
         }
     };
+    
+
 
 
     const toggleCategory = (categoryId) => {
@@ -208,43 +279,6 @@ const CreatePic = ({ selectedColors, selectedImage }) => {
         return imgData;
     };
 
-    const handleSaveImages = async () => {
-        if (!currentImage) return;
-    
-        try {
-            const formData = new FormData();
-    
-            // Преобразование раскрашенной схемы в Blob и добавление в FormData
-            canvasRef.current.toBlob(async (blob) => {
-                formData.append('imagefullschema', blob, 'colored.png');
-            }, 'image/png');
-    
-            // Преобразование содержимого outlineCanvas в Blob и добавление в FormData
-            outlineCanvasRef.current.toBlob(async (blob) => {
-                formData.append('imageschema', blob, 'outline.png');
-    
-                // Преобразование массива paletteRGB в список строк и добавление в FormData
-                selectedColors.forEach((color, index) => {
-                    const hexColor = `#${color.r.toString(16)}${color.g.toString(16)}${color.b.toString(16)}`;
-                    formData.append('palette', hexColor);
-                });
-    
-                // Отправка FormData на сервер
-                const response = await axios2.post('/api/schema/add', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-    
-                if (response.status === 201) {
-                    console.log('Изображения успешно сохранены');
-                }
-            }, 'image/png');
-    
-        } catch (error) {
-            console.error('Ошибка при сохранении изображений:', error);
-        }
-    };
 
 
     return (
@@ -276,15 +310,15 @@ const CreatePic = ({ selectedColors, selectedImage }) => {
 
                                 <div className="title_modal_categ">Выберите категорию</div>
                                 <div className="list_category">
-                                    {dataCategory.map(({ row, index }) => (
-                                        <div key={index}>
+                                    {dataCategory.map(category => (
+                                        <div key={category.id}>
                                             <input
                                                 type="checkbox"
-                                                id={id}
-                                                checked={selectedCategories.includes(id)}
-                                                onChange={() => toggleCategory(id)}
+                                                id={category.id}
+                                                checked={selectedCategories.includes(category.id)}
+                                                onChange={() => toggleCategory(category.id)}
                                             />
-                                            <label htmlFor={index}>{row.name}</label>
+                                            <label htmlFor={category.id}>{category.name}</label>
                                         </div>
                                     ))}
                                 </div>

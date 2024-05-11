@@ -1,13 +1,15 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import '../styles/catalog.scss';
 import Slider from '@mui/material/Slider';
 import Pagination from "../components/pagination";
 import ProductList from "../components/productList";
+import axios2 from '../config/axiosConfig';
 
 const Catalog = () => {
     const [valuePrice, setValuePrice] = useState([20, 37]);
     const [selectedCategory, setSelectedCategory] = useState('Сортировать');
     const [currentPage, setCurrentPage] = useState(1);
+    const [dataCategory, setDataCategory] = useState([]);
 
     const products = [
         { productId: 1, name: "Товар 1", newprice: 100, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
@@ -39,12 +41,28 @@ const Catalog = () => {
         return `${value}₽`;
     };
 
-    const categories = [
-        { name: "Категория 1", count: 25 },
-        { name: "Категория 2", count: 18 },
-        { name: "Категория 3", count: 12 },
-        { name: "Категория 4", count: 8 }
-    ];
+    const fetchCategory = async () => {
+        try {
+            const response = await axios2.get(`/categories`);
+            return response.data;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchedData = await fetchCategory();
+                setDataCategory(fetchedData);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error);
+            }
+        };
+        
+        fetchData();
+    }, []);
 
     return (
         <div>
@@ -53,8 +71,8 @@ const Catalog = () => {
                     <div className="categ_cont">
                         <div className="titl_categ_cont">Категории</div>
                         <ul className="categ_list">
-                            {categories.map((category, index) => (
-                                <li className="categ_li" key={index}>{category.name} ({category.count})</li>
+                            {dataCategory.map((category, index) => (
+                                <li className="categ_li" key={index}>{category.name}</li>
                             ))}
                         </ul>
                     </div>
@@ -89,9 +107,9 @@ const Catalog = () => {
                             <div className="dropdown2 hover">
                                 <a href="/catalog">{selectedCategory}</a>
                                 <ul>
-                                    {categories.map((category, index) => (
+                                    {/* {categories.map((category, index) => (
                                         <li><a key={index}>{category.name}</a></li>
-                                    ))}
+                                    ))} */}
                                 </ul>
                             </div>
                         </div>

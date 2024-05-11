@@ -1,25 +1,15 @@
 import React, {useState, useEffect} from "react";
 import '../styles/data.scss';
+import Swal from 'sweetalert2';
+import axios2 from '../config/axiosConfig';
 
 const Data = () => {
-    const categories = [
-        { name: "Категория 1"},
-        { name: "Категория 2" },
-        { name: "Категория 3" },
-        { name: "Категория 4" },
-        { name: "Категория 5" },
-        { name: "Категория 6" },
-        { name: "Категория 7" },
-        { name: "Категория 8" },
-        { name: "Категория 9" },
-        { name: "Категория 10" },
-        { name: "Категория 11" },
-    ];
     const numPerPage = 5;
     const maxSize = 5;
 
     const [dataCategory, setDataCategory] = useState([]);
     const [dataStock, setDataStock] = useState([]);
+    const [selectedStock, setSelectedStock] = useState("");
 
     const [currentPageCategory, setCurrentPageCategory] = useState(1);
     const [displayCategory, setDisplayCategory] = useState([]);
@@ -73,21 +63,281 @@ const Data = () => {
         setFile(null);
         setFileBytes(null);
     };
+
+    const fetchStocks = async () => {
+        try {
+            const response = await axios2.get(`/stocks`);
+            return response.data;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchedData = await fetchStocks();
+                setDataStock(fetchedData);
+                setDisplayStock(fetchedData);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error);
+            }
+        };
+        
+        fetchData();
+    }, []);
     
 
     useEffect(() => {
-        const filteredDataCategory = dataCategory.filter(row =>
-          row.name.toLowerCase().includes(searchCategory.toLowerCase())
+        const filteredDisplayStock = dataStock.filter(row =>
+            row.description.toLowerCase().includes(searchStock.toLowerCase())
         );
-        setDisplayCategory(filteredDataCategory);
-        setCurrentPageCategory(1);
+        setDisplayStock(filteredDisplayStock);
+        setCurrentPageStock(1);
+    }, [searchStock]);
 
-        const filteredDataStock = dataStock.filter(row =>
-            row.name.toLowerCase().includes(searchStock.toLowerCase())
-          );
-          setDisplayStock(filteredDataStock);
-          setCurrentPageStock(1);
-    }, [searchCategory, searchStock]);
+    const addStock = async (newStock) => {
+        try {
+            const formData = new FormData();
+            formData.append('description', newStock.description);
+            formData.append('imagestock', newStock.imagestock);
+    
+            const response = await axios2.post(`/stocks`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return response;
+        } catch (error) {
+            console.error('Ошибка при добавлении:', error);
+            throw error;
+        }
+    };
+    
+    const handleAddStock = async () => {
+        if (!selectedStock || !fileBytes) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка',
+                text: 'Все данные должны быть загружены',
+            });
+            return;
+        }
+    
+        const stock = {
+            description: selectedStock,
+            imagestock: new Blob([fileBytes], { type: 'application/octet-stream' }),
+        };
+    
+        try {
+            const addedStock = await addStock(stock);
+            if (addedStock.status === 201) {
+                const updatedData = await fetchStocks();
+                setDisplayStock(updatedData);
+                setIsModalOpenStock(false);
+                Swal.fire({
+                    title: 'Добавлено!',
+                    text: 'Акция успешно добавлена',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+            }
+        } catch (error) {
+            console.error(error); // Выводим всю ошибку для диагностики
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка',
+                text: error.message || 'Ошибка при добавлении акции',
+            });
+        }
+    };
+
+    const deleteStock = async (id) => {
+        try {
+            await axios2.delete(`/stocks/${id}`);
+        } catch (error) {
+            console.error('Ошибка при удалении цвета:', error);
+            throw error;
+        }
+    };
+
+    const handleDeleteStock = async (id) => {
+        // Показываем модальное окно с подтверждением удаления
+        const result = await Swal.fire({
+            title: 'Вы уверены?',
+            text: 'Вы точно хотите удалить эту акцию?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Да, удалить!',
+            cancelButtonText: 'Отмена',
+        });
+    
+        // Если пользователь подтвердил удаление
+        if (result.isConfirmed) {
+            try {
+                await deleteStock(id);
+                const updatedData = await fetchStocks();
+                setDisplayStock(updatedData);
+                Swal.fire({
+                    title: 'Удалено!',
+                    text: 'Акция успешно удалена.',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+            } catch (error) {
+                console.error('Ошибка при удалении :', error);
+                // Уведомление об ошибке
+                Swal.fire({
+                    title: 'Ошибка',
+                    text: 'Произошла ошибка при удалении.',
+                    icon: 'error',
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+            }
+        }
+    };
+
+    //работа с категориями
+
+    const fetchCategory = async () => {
+        try {
+            const response = await axios2.get(`/categories`);
+            return response.data;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchedData = await fetchCategory();
+                setDataCategory(fetchedData);
+                setDisplayCategory(fetchedData);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error);
+            }
+        };
+        
+        fetchData();
+    }, []);
+    
+
+    useEffect(() => {
+        const filteredDisplayCategory = dataCategory.filter(row =>
+            row.name.toLowerCase().includes(searchCategory.toLowerCase())
+        );
+        setDisplayCategory(filteredDisplayCategory);
+        setCurrentPageCategory(1);
+    }, [searchCategory]);
+
+    const addCategory = async (newCategory) => {
+        try {
+            const formData = {
+                name: newCategory.name,
+            };
+    
+            const response = await axios2.post(`/categories`, formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return response;
+        } catch (error) {
+            console.error('Ошибка при добавлении:', error);
+            throw error;
+        }
+    };
+    
+    const handleAddCategory = async () => {
+        if (!nameCateg) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка',
+                text: 'Напишите название',
+            });
+            return;
+        }
+    
+        const category = {
+            name: nameCateg
+        };
+    
+        try {
+            const addedCategory = await addCategory(category);
+            if (addedCategory.status === 200) {
+                const updatedData = await fetchCategory();
+                setDisplayCategory(updatedData);
+                setIsModalOpenCategory(false);
+                Swal.fire({
+                    title: 'Добавлено!',
+                    text: 'Категория успешно добавлена',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Ошибка',
+                text: error.message || 'Ошибка при добавлении',
+            });
+        }
+    };
+
+    const deleteCategory = async (id) => {
+        try {
+            await axios2.delete(`/categories/${id}`);
+        } catch (error) {
+            console.error('Ошибка при удалении:', error);
+            throw error;
+        }
+    };
+
+    const handleDeleteCategory = async (id) => {
+        const result = await Swal.fire({
+            title: 'Вы уверены?',
+            text: 'Вы точно хотите удалить эту категорию?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Да, удалить!',
+            cancelButtonText: 'Отмена',
+        });
+    
+        // Если пользователь подтвердил удаление
+        if (result.isConfirmed) {
+            try {
+                await deleteCategory(id);
+                const updatedData = await fetchCategory();
+                setDisplayCategory(updatedData);
+                Swal.fire({
+                    title: 'Удалено!',
+                    text: 'Категория успешно удалена.',
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+            } catch (error) {
+                console.error('Ошибка при удалении :', error);
+                // Уведомление об ошибке
+                Swal.fire({
+                    title: 'Ошибка',
+                    text: 'Произошла ошибка при удалении.',
+                    icon: 'error',
+                    timer: 2000,
+                    timerProgressBar: true,
+                });
+            }
+        }
+    };
+
 
     return (
         <div>
@@ -114,10 +364,10 @@ const Data = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {dataCategory.slice((currentPageCategory - 1) * numPerPage, currentPageCategory * numPerPage).map((row, index) => (
+                            {displayCategory.slice((currentPageCategory - 1) * numPerPage, currentPageCategory * numPerPage).map((row, index) => (
                                 <tr key={index}>
                                     <td>{row.name}</td>
-                                    <td><button className="close thick"></button></td>
+                                    <td><button className="close thick" onClick={() => handleDeleteCategory(row.id)}></button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -155,11 +405,11 @@ const Data = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {dataStock.slice((currentPageStock - 1) * numPerPage, currentPageStock * numPerPage).map((row, index) => (
+                            {displayStock.slice((currentPageStock - 1) * numPerPage, currentPageStock * numPerPage).map((row, index) => (
                                 <tr key={index}>
-                                    <td><img src={`data:image/png;base64,${row.image}`} style={{ width: '50px', height: '50px' }} /></td>
+                                    <td><img src={`data:image/png;base64,${row.imagestock}`} style={{ width: '50px', height: '50px' }} /></td>
                                     <td>{row.description}</td>
-                                    <td><button className="close thick"></button></td>
+                                    <td><button className="close thick" onClick={() => handleDeleteStock(row.id)}></button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -186,7 +436,7 @@ const Data = () => {
                         </div>
                         
                         <div className="modal_schema_action">
-                            <button >добавить</button>
+                            <button onClick={handleAddCategory}>добавить</button>
                             <button onClick={() => setIsModalOpenCategory(false)}>отмена</button>
                         </div>
                     </div>
@@ -198,7 +448,7 @@ const Data = () => {
                     <div className="modal_addstock_container">
                         <div className="title_modal_addstock">Добавление акции</div>
 
-                        <textarea className='schema_desc' placeholder='Небольшое описание акции'></textarea>
+                        <textarea className='schema_desc' placeholder='Небольшое описание акции' value={selectedStock} onChange={(e) => {setSelectedStock(e.target.value)}}></textarea>
 
                         <div className="input-file-row">
                             <label className="input-file">
@@ -234,7 +484,7 @@ const Data = () => {
                         </div>
                         
                         <div className="modal_schema_action">
-                            <button >добавить</button>
+                            <button onClick={handleAddStock}>добавить</button>
                             <button onClick={() => {
                                 setIsModalOpenStock(false);
                                 setFile(null);

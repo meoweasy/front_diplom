@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import axios2 from '../config/axiosConfig';
 
 const Schema = () => {
     const [selectedImage, setImageSrc] = useState(null);
@@ -26,9 +27,25 @@ const Schema = () => {
     const canvasRef = useRef(null);
     const [paletteRGB, setPaletteRGB] = useState([]);
     const [numberOfColors, setNumberOfColors] = useState('');
+    const [allColors, setAllColors] = useState([]);
+
+
 
     const handleButtonClick3 = () => {
         setShowCreatePic(true);
+    };
+
+    useEffect(() => {
+        const fetchColors = async () => {
+            const colors = await fetchAllColors();
+            setAllColors(colors);
+        };
+
+        fetchColors();
+    }, []);
+
+    const addColorToPalette = (color) => {
+        setPaletteRGB(prevPalette => [...prevPalette, color]);
     };
 
     useEffect(() => {
@@ -164,69 +181,90 @@ const Schema = () => {
         })
     };
 
-    const getColorPalette = () => {
-        const colorThief = new ColorThief();
-        const image = new Image();
-        image.crossOrigin = 'Anonymous'; // Разрешение на загрузку изображения с другого домена
+    const fetchAllColors = async () => {
+        try {
+            const response = await axios2.get('/palletes');
+            return response.data;
+        } catch (error) {
+            console.error('Ошибка при получении цветов:', error);
+            return [];
+        }
+    };
 
-        image.onload = () => {
-            const dominantColor = colorThief.getColor(image);
-            const numColors = parseInt(numberOfColors, 10);
-            const colorPalette = colorThief.getPalette(image, numColors); // Получение палитры цветов из изображения
+    const hexToRgb = (hex) => {
+        // Убираем символ # из HEX-строки
+        const hexWithoutHash = hex.replace('#', '');
+    
+        // Конвертируем HEX в RGB
+        const r = parseInt(hexWithoutHash.substring(0, 2), 16);
+        const g = parseInt(hexWithoutHash.substring(2, 4), 16);
+        const b = parseInt(hexWithoutHash.substring(4, 6), 16);
+    
+        return { r, g, b };
+    };
 
-            // Фильтрация палитры, чтобы исключить похожие цвета
-            const filteredPalette = filterSimilarColors(dominantColor, colorPalette);
-
-            const rgbPalette = filteredPalette.map(color => ({
-                r: color[0],
-                g: color[1],
-                b: color[2]
-            }));
-            setPaletteRGB(rgbPalette);
-        };
-
-        image.src = croppedImage;
+    const calculateDistance = (color1, color2) => {
+        return Math.sqrt(
+            Math.pow(color1.r - color2.r, 2) +
+            Math.pow(color1.g - color2.g, 2) +
+            Math.pow(color1.b - color2.b, 2)
+        );
     };
     
-    // Функция для фильтрации похожих цветов в палитре
-    const filterSimilarColors = (dominantColor, colorPalette) => {
-        const filteredPalette = [dominantColor]; // Добавление доминантного цвета в палитру
-        const threshold = 50; // Порог для определения похожести цветов
+    const findClosestUniqueColors = (targetColors, dbColors, threshold = 50) => {
+        let uniqueColors = new Set();
+        
+        targetColors.forEach(targetColor => {
+            let minDistance = Infinity;
+            let closestColor = null;
     
-        // Фильтрация похожих цветов
-        colorPalette.forEach(color => {
-          if (!isSimilarColor(color, filteredPalette, threshold)) {
-            filteredPalette.push(color);
-          }
+            dbColors.forEach(dbColor => {
+                const distance = calculateDistance(targetColor, dbColor);
+                
+                if (distance < minDistance && !uniqueColors.has(dbColor)) {
+                    minDistance = distance;
+                    closestColor = dbColor;
+                }
+            });
+    
+            if (minDistance <= threshold && closestColor) {
+                uniqueColors.add(closestColor);
+            }
         });
     
-        return filteredPalette;
+        return Array.from(uniqueColors);
     };
     
-    // Функция для определения похожести цветов
-    const isSimilarColor = (color, palette, threshold) => {
-    for (let i = 0; i < palette.length; i++) {
-        const dist = Math.sqrt(
-        Math.pow(color[0] - palette[i][0], 2) +
-        Math.pow(color[1] - palette[i][1], 2) +
-        Math.pow(color[2] - palette[i][2], 2)
-        );
-
-        if (dist < threshold) {
-        return true;
-        }
-    }
-    return false;
-    };
+    const getColorPaletteFromDB = async () => {
+        const allColors = await fetchAllColors();
+        const hexValues = allColors.map(color => color.hex);
+        const allColorsRGB = hexValues.map(hexToRgb);
     
-    // Конвертация RGB в HEX
-    const rgbToHex = (rgb) => {
-    return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
+        const colorThief = new ColorThief();
+        const image = new Image();
+        image.crossOrigin = 'Anonymous';
+    
+        image.onload = () => {
+            const dominantColor = colorThief.getColor(image);
+            const palette = colorThief.getPalette(image);
+    
+            const yourImageColors = palette.map(color => ({ r: color[0], g: color[1], b: color[2] }));
+    
+            const closestUniqueColors = findClosestUniqueColors(yourImageColors, allColorsRGB);
+            
+            setPaletteRGB(closestUniqueColors);
+        };
+    
+        image.src = croppedImage;
     };
 
     const handleColorRemoval = (indexToRemove) => {
         setPaletteRGB(prevPalette => prevPalette.filter((_, index) => index !== indexToRemove));
     };
+
+    const reload = () => {
+        window.location.reload(false)
+    }
 
     return (
         <div>
@@ -238,7 +276,7 @@ const Schema = () => {
                             key={0}
                             number={1}
                             header={'Изображение'} 
-                            expandedHeight={'200px'} 
+                            expandedHeight={'205px'} 
                             isFirst={true} isLast={false} 
                             onNext={handleNext} 
                             onPrev={handlePrev} 
@@ -349,7 +387,7 @@ const Schema = () => {
                                     InputProps={{
                                         endAdornment: (
                                             <IconButton
-                                                onClick={getColorPalette}
+                                                onClick={getColorPaletteFromDB}
                                                 edge="end"
                                                 sx={{
                                                     borderRadius: '4px', // Устанавливаем квадратные углы
@@ -395,19 +433,22 @@ const Schema = () => {
                                         </div>
                                     ))}
                                 </div>
+                                <AddColorDropdown colors={allColors} onAddColor={addColorToPalette} />
                             </div>
                         </SettingBlock>
                         <SettingBlock
                             key={3}
                             number={4}
                             header={'Генерация'} 
-                            expandedHeight={'200px'} 
+                            expandedHeight={'190px'} 
                             isFirst={false} isLast={true} 
                             onNext={handleNext} 
                             onPrev={handlePrev} 
                             isVisible={currentBlockIndex === 3}>
                             <div className="pic_cont">
-                                <button className="add_pic" onClick={handleButtonClick3}>Сгенерировать</button>
+                                <div className="subtitle_pic">Нажмите кнопку сгенерировать и дождитесь процесса генерации</div>
+                                <button className="add_pic2" onClick={handleButtonClick3}>Сгенерировать</button>
+                                <button className="add_pic2" onClick={reload}>Сбросить</button>
                                 <input type="range" min="1" max="100" step="1" value="40" id="darknessSlider" style={{display: "none"}}
                                     oninput="document.getElementById('darknessSliderNumber').innerHTML = this.value; var gray = Math.round(255 * (1 - this.value / 100)); document.getElementById('darknessSliderNumber').style.color = 'rgb('+gray+', '+gray+', '+gray+')';"></input>
   
@@ -452,7 +493,10 @@ const Schema = () => {
                                         <img src={croppedImage} alt="" style={{ maxWidth: "100%", height: "100%", objectFit: "contain" }} onClick={handleImageClick} />
                                     </div>
                                 ) : currentBlockIndex === 3 ? (
-                                    <div></div>
+                                    <div>
+                                        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                                        {showCreatePic && <CreatePic selectedColors={paletteRGB} selectedImage={croppedImage} />}
+                                    </div>
                                 ) : (
                                     <div className="img_win">
                                         {/* Заглушка, если изображение не выбрано */}
@@ -460,14 +504,58 @@ const Schema = () => {
                                 )}
                             </>
                         )}
-                        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-                        {showCreatePic && <CreatePic selectedColors={paletteRGB} selectedImage={croppedImage} />}
                     </div>
                 </div>
             </div>
         </div>
     );
 }
+
+const AddColorDropdown = ({ colors, onAddColor }) => {
+    const [selectedColor, setSelectedColor] = useState('');
+
+    const handleChange = (event) => {
+        setSelectedColor(event.target.value);
+    };
+
+    const hexToRgb = (hex) => {
+        // Убираем символ # из HEX-строки
+        const hexWithoutHash = hex.replace('#', '');
+    
+        // Конвертируем HEX в RGB
+        const r = parseInt(hexWithoutHash.substring(0, 2), 16);
+        const g = parseInt(hexWithoutHash.substring(2, 4), 16);
+        const b = parseInt(hexWithoutHash.substring(4, 6), 16);
+    
+        return { r, g, b };
+    };
+
+    const handleAddColor = () => {
+        const color = hexToRgb(selectedColor);
+        onAddColor(color);
+        setSelectedColor('');
+    };
+
+    return (
+        <div>
+            <select value={selectedColor} onChange={handleChange}>
+                <option value="" disabled>
+                    Выберите цвет
+                </option>
+                {colors.map((color, index) => (
+                    <option 
+                        key={index} 
+                        value={color.hex}
+                        style={{ backgroundColor: `${color.hex}`, color: '#000000' }}
+                    >
+                        {color.hex}
+                    </option>
+                ))}
+            </select>
+            <button onClick={handleAddColor}>Добавить</button>
+        </div>
+    );
+};
 
 
 export default Schema;

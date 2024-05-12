@@ -59,6 +59,23 @@ const smooth = (mat) => {
     return simp;
 };
 
+// const smooth = (mat) => {
+//     const width = mat[0].length;
+//     const height = mat.length;
+//     const smoothedMat = [];
+
+//     for (let y = 0; y < height; y++) {
+//         smoothedMat[y] = new Array(width);
+//         for (let x = 0; x < width; x++) {
+//             const neighborhood = getVicinVals(mat, x, y, 1); // окрестность 3x3
+//             const average = _.mean(neighborhood); // среднее значение в окрестности
+//             smoothedMat[y][x] = Math.round(average); // округляем до целого
+//         }
+//     }
+
+//     return smoothedMat;
+// };
+
 //imageProcess
 const getVicinVals = (mat, x, y, range) => {
     const width = mat[0].length;
@@ -167,6 +184,40 @@ const removeRegion = (mat, region) => {
     for (let i = 0; i < region.x.length; i++) {
         mat[region.y[i]][region.x[i]] = newValue;
     }
+};
+
+const gaussianBlur = (mat) => {
+    const width = mat[0].length;
+    const height = mat.length;
+    const result = [];
+    
+    for (let i = 0; i < height; i++) {
+        result[i] = new Array(width).fill(0);
+    }
+
+    const kernel = [
+        [1, 2, 1],
+        [2, 4, 2],
+        [1, 2, 1]
+    ];
+
+    const kernelSum = 16; // Сумма всех элементов ядра
+
+    for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+            let sum = 0;
+            
+            for (let ky = -1; ky <= 1; ky++) {
+                for (let kx = -1; kx <= 1; kx++) {
+                    sum += mat[y + ky][x + kx] * kernel[ky + 1][kx + 1];
+                }
+            }
+
+            result[y][x] = sum / kernelSum;
+        }
+    }
+
+    return result;
 };
 
 ctx.addEventListener("message", (event) => {

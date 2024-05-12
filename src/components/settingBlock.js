@@ -30,7 +30,7 @@ function SettingBlock(props) {
             <div className="content" style={{ height: isVisible ? (isCollapsed ? '0' : expandedHeight) : '0' }}>
                 {props.children}
                 <div className='nav_btn_set'>
-                    {!isFirst && (
+                    {!isLast && !isFirst && (
                         <div className='backBtn' onClick={props.onPrev}>
                             <FontAwesomeIcon icon={faChevronLeft} />
                         </div>

@@ -45,7 +45,7 @@ const Navbar = () => {
                             </Link>
                         </div>
                         <div className='nav'>
-                            <Link to="/catolog" className="no-style-link">
+                            <Link to="/catalog" className="no-style-link">
                                 Каталог
                             </Link>
                         </div>
@@ -57,20 +57,20 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className='header_cont_second'>
-                    <div className='categories_cont'>
+                    {/* <div className='categories_cont'>
                         <div class="dropdown hover">
                             <a href="/">Категории</a>
                             <ul>
-                                {/* <li><a href="#">Категория1</a></li>
+                                <li><a href="#">Категория1</a></li>
                                 <li><a href="#">Категория2</a></li>
                                 <li><a href="#">Категория3</a></li>
                                 <li><a href="#">Категория4</a></li>
                                 <li><a href="#">Категория5</a></li>
                                 <li><a href="#">Категория6</a></li>
-                                <li><a href="#">Категория7</a></li> */}
+                                <li><a href="#">Категория7</a></li>
                             </ul>
                         </div>
-                    </div>
+                    </div> */}
                     <div className='search_cont'>
                         <input type='text' placeholder="Найти на сайте..." ></input>
                         <button type="submit">Поиск</button>

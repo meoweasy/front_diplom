@@ -26,7 +26,7 @@
     font-weight: 700;
     font-size: 35px;
     @include text-gradient(#FD475E, #7D8AFA);
-    margin-left: 19px;
+    margin-left: 0px;
 }
 .social_network{
     width: 112px;
@@ -172,11 +172,11 @@ a:hover{
     font-family: $font_main;
     font-size: 16px;
     font-weight: 400;
-    margin-left: auto;
+    margin-left: 0px;
     margin-right: auto;
 }
 .search_cont > input {
-    width: 271px;
+    width: 715px;
     height: 38px;
     padding: 0px;
     border-radius: 2px 0px 0px 2px;

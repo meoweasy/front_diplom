@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/sliderStocks.scss';
+import axios2 from '../config/axiosConfig';
 
 const SliderStocks = () => {
     const [pos, setPos] = useState(0);
-    const totalSlides = 2;
+    const totalSlides = 3;
+    const [dataStock, setDataStock] = useState([]);
 
     const slideLeft = () => {
         setPos(prevPos => (prevPos === 0 ? totalSlides - 1 : prevPos - 1));
@@ -19,16 +21,28 @@ const SliderStocks = () => {
         slider.style.transform = `translateX(-${pos * sliderWidth}px)`;
     }, [pos]);
 
-    const slides = [
-        {
-            color: "#1abc9c",
-            title: "Slide #1"
-        },
-        {
-            color: "#3498db",
-            title: "Slide #2"
+    const fetchStocks = async () => {
+        try {
+            const response = await axios2.get(`/stocks`);
+            return response.data;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            throw error;
         }
-    ];
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchedData = await fetchStocks();
+                setDataStock(fetchedData);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error);
+            }
+        };
+        
+        fetchData();
+    }, []);
 
     return (
         <div className='slider_cont'>
@@ -37,10 +51,10 @@ const SliderStocks = () => {
                     <i className="fa fa-arrow-left"></i>
                 </div>
                 <ul id="slider">
-                    {slides.map((slide, index) => (
-                        <li key={index} style={{backgroundColor: slide.color}}>
+                    {dataStock.map((row, index) => (
+                        <li key={index}>
                             <div>
-                                <h3>{slide.title}</h3>
+                                <img class="act" src={`data:image/png;base64,${row.imagestock}`}/>
                             </div>
                         </li>
                     ))}

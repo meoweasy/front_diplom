@@ -2,4 +2,54 @@
 
 .home{
     width: 100%;
+    font-family: $font_main;
+}
+.delivery_info{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.del_main_cont{
+    display: flex;
+    width: 1170px;
+    height: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: $font_main;
+    justify-content: space-around;
+}
+.delivery_cont{
+    display: flex;
+    align-items: center;
+}
+.del1{
+    margin-left: 5px;
+    width: 130px;
+}
+.del2{
+    width: 180px;
+}
+.del3{
+    margin-left: 10px;
+    width: 170px;
+}
+.del4{
+    width: 120px;
+}
+.delivery_title{
+    font-size: 16px;
+    font-weight: 500;
+}
+.delivery_subtitle{
+    font-size: 14px;
+}
+
+
+.sale_inf{
+    background-color: $main_color;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-weight: 500;
+    color: white;
 }

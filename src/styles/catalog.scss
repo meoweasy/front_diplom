@@ -1,0 +1,206 @@
+@import './main.scss';
+
+.container_catalog{
+    width: 1170px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: $font_main;
+    display: flex;
+}
+.categ_cont{
+    width: 241px;
+    height: 400px;
+}
+.titl_categ_cont{
+    width: 231px;
+    height: 40px;
+    border-radius: 2px;
+    background-color: $main_color;
+    text-transform: uppercase;
+    color: white;
+    line-height: 40px;
+    font-size: 14px;
+    font-weight: 400;
+    padding-left: 10px;
+}
+.categ_list{
+    width: 241px;
+    height: 300px;
+    list-style: none;
+    padding: 0px;
+    margin-top: 0px;
+    font-family: $font_main;
+    font-size: 14px;
+}
+.categ_li{
+    width: 231px;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    border-bottom: 1px solid #ccc;
+    
+}
+.categ_li:hover{
+    background-color: $main_color;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.price_cont{
+    width: 241px;
+}
+
+//сам каталог
+.cont_main_catalog_card{
+    width: 899px;
+    margin-left: 30px;
+    height: 900px;
+}
+.item_menu{
+    width: 899px;
+    border: 1px solid #EEE;
+    height: 38px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+}
+.icon_menu{
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+//выпадающий список 
+.dropdown2 {
+    width: 200px;
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+    margin-left: auto;
+    margin-right: 20px;
+}
+.dropdown2 > a[href='/']{
+    border-radius: 2px;
+    color: #000;
+}
+.dropdown2 > a::after {
+    content: "";
+    float: right;
+    margin: 8px 8px 0 0;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid #000000;
+}
+.dropdown2 ul {
+    list-style-type: none;
+    display: block;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+}
+.dropdown2 a {
+    display: block;
+    padding: 0 0 0 10px;
+    text-decoration: none;
+    line-height: 25px;
+    font-family: $font_main;
+    font-weight: 400;
+    font-size: 13px;
+    background-color: #EEE;
+}
+.dropdown2 li {
+    height: 0;
+    overflow: hidden;
+    transition: all 500ms;
+}
+.dropdown2.hover li {
+    transition-delay: 300ms;
+}
+.dropdown2 li:first-child a {
+    border-radius: 2px 2px 0 0;
+}
+.dropdown2 li:last-child a {
+    border-radius: 0 0 2px 2px;
+}
+.dropdown2 li:first-child a::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #FFF;
+    margin: -10px 0 0 30px;
+}
+.dropdown2 a:hover {
+    background-color: $main_color;
+    color: #fff;
+}
+.dropdown2 > a:hover::after {
+    border-top-color: #fff;
+}
+.dropdown2 li:first-child a:hover::before {
+    border-bottom-color: #EEE;
+}
+.dropdown2.hover:hover li {          
+    height: 25px;
+}
+.dropdown2.hover:hover li:first-child {
+    padding-top: 15px;
+}
+
+//карточка
+.product-card{
+    width: 216px;
+    //height: 376px;
+    margin: 10px;
+    font-family: $font_main;
+}
+.product-list{
+    width: 899px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.desc_card{
+    font-family: $font_main;
+    margin: 5px;
+}
+.desc_price{
+    display: flex;
+    align-items: center;
+}
+.act{
+    font-size: 17px;
+    font-weight: 600;
+    color: $main_color;
+}
+.neact{
+    font-size: 14px;
+    text-decoration: line-through;
+    color: #727272;
+    margin-left: 10px;
+}
+.desc_name_card{
+    margin-top: 2px;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+.response_cont{
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #727272;
+}
+.response{
+    margin-left: 3px;
+    margin-right: 5px;
+}
+.num_resp{
+    margin-left: 5px;
+}

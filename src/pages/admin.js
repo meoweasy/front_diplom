@@ -15,6 +15,7 @@ import LoginAdmin from './loginAdmin';
 import Data from './dataPage';
 import ShemaTable from './schemaTable';
 import PalleteTable from './palleteTable';
+import ProductTable from './productTable';
 
 
 const AdminHome = () => {
@@ -43,6 +44,7 @@ const AdminHome = () => {
                     <Route path="/home/data" element={<Data />} />
                     <Route path="/home/schemasData" element={<ShemaTable />} />
                     <Route path="/home/palleteData" element={<PalleteTable />} />
+                    <Route path="/home/productsData" element={<ProductTable />} />
                     </>
                 ) : (
                     <Route path="*" element={<Navigate to="/admin/login" />} />

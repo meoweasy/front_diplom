@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import "../styles/navbar.scss";
 
 const Navbar = () => {
@@ -8,6 +8,12 @@ const Navbar = () => {
     if (location.pathname === '/admin_home') {
         return null;
     }
+
+    const navigate = useNavigate();
+
+    const handleNavigation = () => {
+        navigate('/login');
+    };
 
     return (
       <>
@@ -76,7 +82,7 @@ const Navbar = () => {
                         <button type="submit">Поиск</button>
                     </div>
                     <div className='navigation_second'>
-                        <div className='nav2'>
+                        <div className='nav2' onClick={handleNavigation} style={{ cursor: 'pointer' }}>
                             <div className='svg'>
                                 <svg fill="#7D8AFA" width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                     <g>

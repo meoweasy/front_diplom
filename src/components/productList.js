@@ -10,7 +10,7 @@ const ProductList = ({ products, page, pageSize }) => {
     return (
         <div className="product-list">
         {paginatedProducts.map((product, index) => (
-            <ProductCard key={index} productId={product.productId} name={product.name} newprice={product.newprice} oldprice={product.oldprice} responsescore={product.responsescore} responsenum={product.responsenum} />
+            <ProductCard key={index} images={product.images} productId={product.id} name={product.name} description={product.description} newprice={product.currentprice} oldprice={product.oldprice} responsescore={product.responsescore} responsenum={product.responsenum} />
         ))}
         </div>
     );

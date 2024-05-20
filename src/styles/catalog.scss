@@ -157,9 +157,10 @@
 //карточка
 .product-card{
     width: 216px;
-    //height: 376px;
+    height: 376px;
     margin: 10px;
     font-family: $font_main;
+    border-radius: 6px;
 }
 .product-list{
     width: 899px;
@@ -169,22 +170,25 @@
 }
 .desc_card{
     font-family: $font_main;
-    margin: 5px;
+    margin: 15px;
 }
 .desc_price{
     display: flex;
     align-items: center;
+    flex-wrap: nowrap;
 }
 .act{
     font-size: 17px;
     font-weight: 600;
     color: $main_color;
+    width: auto;
 }
 .neact{
     font-size: 14px;
     text-decoration: line-through;
     color: #727272;
-    margin-left: 10px;
+    margin-left: auto;
+    margin-right: 0px;
 }
 .desc_name_card{
     margin-top: 2px;
@@ -203,4 +207,81 @@
 }
 .num_resp{
     margin-left: 5px;
+}
+.css-1ps6pg7-MuiPaper-root {
+    box-shadow: none !important;
+}
+.product-card:hover{
+    -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+}
+
+//страница товара
+.prod_detail_container{
+    width: 1170px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.product_info{
+    display: flex;
+    font-family: $font_main;
+}
+.images_product{
+    width: 445px;
+    height: 445px;
+}
+.categ_inf{
+    display: flex;
+    font-size: 14px;
+}
+.categ_inf div{
+    text-transform: lowercase;
+    margin-left: 5px;
+}
+.name_prod{
+    font-size: 24px;
+    font-weight: 500;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.main_info_prod{
+    width: 600px;
+}
+.desc_prd_info{
+    font-size: 16px;
+}
+.price_info{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+.price_now{
+    font-size: 24px;
+    font-weight: 600;
+    color: $main_color;
+}
+.price_old{
+    text-decoration: line-through;
+    color: #727272;
+    margin-left: 10px;
+}
+.zak_prod_inf{
+    width: 142px;
+    height: 40px;
+    border: none;
+    background-color: #7D8AFA;
+    color: #FFF;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-weight: 500;
+    border-radius: 2px;
+    font-family: $font_main;
+}
+.zak_prod_inf:hover{
+    background-color: #5d66ba;
+    transition: all 0.5s;
 }

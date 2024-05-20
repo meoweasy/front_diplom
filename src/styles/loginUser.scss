@@ -1,0 +1,66 @@
+@import './main.scss';
+
+.login-page1{
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: $font_main;
+}
+.form1{
+    width: 400px;
+    -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+}
+.btn_form_cont{
+    width: 400px;
+    height: 40px;
+}
+.btn_log, .btn_reg{
+    width: 200px;
+    height: 40px;
+    cursor: pointer;
+    border: none;
+    font-family: $font_main;
+    font-weight: 500;
+    color: #5a64bb;
+}
+
+.btn_log.active, .btn_reg.active{
+    background-color: white;
+}
+.login-form2{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.login-form2 input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.login-form2 button {
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #7D8AFA;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+}
+.login-form2 button:hover,.login-form2 button:active,.login-form2 button:focus {
+    background: #5a64bb;
+}

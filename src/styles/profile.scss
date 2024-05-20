@@ -1,0 +1,36 @@
+@import "./main.scss";
+
+.profile_cont{
+    width: 1170px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    display: flex;
+}
+.nav_dash{
+    width: 250px;
+}
+.nav_dash button{
+    width: 250px;
+    height: 40px;
+    border: 1px solid #cbcbcb;
+    background-color: white;
+    font-family: $font_main;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+.nav_dash button:hover{
+    background-color: $main_color;
+    transition: all 0.5s;
+}
+.cont_info_pr{
+    margin-left: 30px;
+    width: 890px;
+    height: 450px;
+    border: 1px solid #cbcbcb;
+    padding: 20px;
+}
+.title_prof{
+    font-family: $font_main;
+    font-size: 24px;
+}

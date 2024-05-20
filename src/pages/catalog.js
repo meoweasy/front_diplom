@@ -10,18 +10,30 @@ const Catalog = () => {
     const [selectedCategory, setSelectedCategory] = useState('Сортировать');
     const [currentPage, setCurrentPage] = useState(1);
     const [dataCategory, setDataCategory] = useState([]);
+    const [dataProduct, setDataProduct] = useState([]);
 
-    const products = [
-        { productId: 1, name: "Товар 1", newprice: 100, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
-        { productId: 2, name: "Товар 2", newprice: 200, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
-        { productId: 3, name: "Товар 3", newprice: 300, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
-        { productId: 4, name: "Товар 4", newprice: 400, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
-        { productId: 5, name: "Товар 5", newprice: 500, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
-        { productId: 6, name: "Товар 6", newprice: 600, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
-        { productId: 7, name: "Товар 7", newprice: 700, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
-        { productId: 8, name: "Товар 8", newprice: 800, oldprice: 100, responsescore: 4.5, responsenum: 1200 },
-        { productId: 9, name: "Товар 9", newprice: 900, oldprice: 100, responsescore: 4.5, responsenum: 1200 }
-    ];
+    const fetchProduct = async () => {
+        try {
+            const response = await axios2.get(`/products`);
+            return response.data;
+        } catch (error) {
+            console.error('Ошибка при получении данных:', error);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchedData = await fetchProduct();
+                setDataProduct(fetchedData);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных:', error);
+            }
+        };
+        
+        fetchData();
+    }, []);
 
     const pageSize = 9;
 
@@ -116,8 +128,8 @@ const Catalog = () => {
                     </div>
                     
                     <div className="productlist">
-                        <ProductList products={products} page={currentPage} pageSize={pageSize} />
-                        <Pagination totalProducts={products.length} pageSize={pageSize} onPageChange={handlePageChange} />
+                        <ProductList products={dataProduct} page={currentPage} pageSize={pageSize} />
+                        <Pagination totalProducts={dataProduct.length} pageSize={pageSize} onPageChange={handlePageChange} />
                     </div>
                 </div>
                 
